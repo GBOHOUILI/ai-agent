@@ -1,0 +1,29 @@
+{
+  "name": "ai-agent",
+  "version": "10.0.0",
+  "description": "Zero-to-One AI — Agent CLI multi-provider par Eldo-Moréo GBOHOUILI",
+  "main": "agent.js",
+  "type": "module",
+  "scripts": {
+    "start": "node agent.js",
+    "setup": "node setup/wizard.js",
+    "dev": "node --watch agent.js"
+  },
+  "bin": {
+    "ai": "./agent.js",
+    "ai-setup": "./setup/wizard.js"
+  },
+  "keywords": ["ai","agent","cli","llm","gemini","groq","claude","openrouter","roadmap","developer-tools","zero-to-one"],
+  "author": "Eldo-Moréo GBOHOUILI <https://github.com/GBOHOUILI>",
+  "license": "MIT",
+  "homepage": "https://github.com/GBOHOUILI/ai-agent",
+  "repository": { "type": "git", "url": "https://github.com/GBOHOUILI/ai-agent.git" },
+  "bugs": { "url": "https://github.com/GBOHOUILI/ai-agent/issues" },
+  "engines": { "node": ">=18.0.0" },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "readline-sync": "^1.4.10",
+    "@inquirer/prompts": "^7.0.0",
+    "nanoid": "^5.0.7"
+  }
+}

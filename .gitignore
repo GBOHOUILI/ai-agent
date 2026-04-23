@@ -1,0 +1,9 @@
+node_modules/
+.env
+*.env.local
+.env.production
+.ai-organize-log.json
+.ai-agent-memory/
+dist/
+*.log
+.DS_Store
