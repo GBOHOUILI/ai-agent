@@ -18,7 +18,7 @@
 ## Installation en une commande
 
 ```bash
-npm install -g ai-agent
+npm install -g zero-to-one-ai
 ```
 
 Puis lance l'agent :
