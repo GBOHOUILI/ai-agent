@@ -4,7 +4,7 @@
 
 **Agent CLI intelligent multi-provider — du projet à la production**
 
-[![npm version](https://img.shields.io/npm/v/ai-agent?color=gold&label=npm)](https://www.npmjs.com/package/ai-agent)
+[![npm version](https://img.shields.io/npm/v/ai-agent?color=gold&label=npm)](https://www.npmjs.com/package/zero-to-one-ai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-gold)](https://nodejs.org)
 [![GitHub Stars](https://img.shields.io/github/stars/GBOHOUILI/ai-agent?style=social)](https://github.com/GBOHOUILI/ai-agent)
