@@ -1,6 +1,6 @@
 {
   "name": "zero-to-one-ai",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Zero-to-One AI — Agent CLI multi-provider par Eldo-Moréo GBOHOUILI",
   "main": "agent.js",
   "type": "module",
@@ -13,13 +13,32 @@
     "ai": "./agent.js",
     "ai-setup": "./setup/wizard.js"
   },
-  "keywords": ["ai","agent","cli","llm","gemini","groq","claude","openrouter","roadmap","developer-tools","zero-to-one"],
+  "keywords": [
+    "ai",
+    "agent",
+    "cli",
+    "llm",
+    "gemini",
+    "groq",
+    "claude",
+    "openrouter",
+    "roadmap",
+    "developer-tools",
+    "zero-to-one"
+  ],
   "author": "Eldo-Moréo GBOHOUILI <https://github.com/GBOHOUILI>",
   "license": "MIT",
   "homepage": "https://github.com/GBOHOUILI/ai-agent",
-  "repository": { "type": "git", "url": "https://github.com/GBOHOUILI/ai-agent.git" },
-  "bugs": { "url": "https://github.com/GBOHOUILI/ai-agent/issues" },
-  "engines": { "node": ">=18.0.0" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GBOHOUILI/ai-agent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GBOHOUILI/ai-agent/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "dotenv": "^16.4.5",
     "readline-sync": "^1.4.10",
