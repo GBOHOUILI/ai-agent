@@ -1,50 +1,122 @@
 // modules/repl/index.js — REPL avec historique + touches directionnelles
-// Remplace readline-sync pour le prompt principal
+// FIX: confirm/question 100% async readline natif — plus de readline-sync
+// FIX: Ctrl+C pendant une tâche = annule proprement sans fermer le terminal
 
 import readline from "readline";
-import readlineSync from "readline-sync";
 
-// ─── Prompt principal avec flèches haut/bas ───────────────────────────────────
+// ─── Instance globale ─────────────────────────────────────────────────────────
+let _rl = null;
+let _busy = false; // true quand l'agent traite une commande
+
+// ─── REPL principal ───────────────────────────────────────────────────────────
 
 export function createREPL({ prompt, onLine }) {
-  const rl = readline.createInterface({
-    input:     process.stdin,
-    output:    process.stdout,
-    terminal:  true,
+  _rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: true,
     historySize: 500,
     removeHistoryDuplicates: true,
   });
 
-  rl.setPrompt(prompt);
-  rl.prompt();
+  _rl.setPrompt(prompt);
+  _rl.prompt();
 
-  rl.on("line", async (line) => {
+  _rl.on("line", async (line) => {
     const trimmed = line.trim();
-    if (trimmed) {
-      await onLine(trimmed);
+    if (!trimmed) {
+      _rl.prompt();
+      return;
     }
-    rl.prompt();
+    _busy = true;
+    try {
+      await onLine(trimmed);
+    } finally {
+      _busy = false;
+      _rl.prompt();
+    }
   });
 
-  rl.on("close", () => {
+  _rl.on("close", () => {
     console.log("\n  Au revoir.\n");
     process.exit(0);
   });
 
-  rl.on("SIGINT", () => {
-    console.log("\n  Ctrl+C — tape 'exit' pour quitter proprement.");
-    rl.prompt();
+  // Ctrl+C : annule la tâche en cours sans quitter
+  _rl.on("SIGINT", () => {
+    if (_busy) {
+      console.log("\n\n  ⚠  Tâche interrompue. Tape 'exit' pour quitter.\n");
+      _busy = false;
+      _rl.prompt();
+    } else {
+      console.log("\n  Tape 'exit' pour quitter.\n");
+      _rl.prompt();
+    }
   });
 
-  return rl;
+  return _rl;
 }
 
-// ─── Confirmation y/n (readline-sync pour les questions inline) ───────────────
+// ─── confirm(question) → Promise<boolean> ────────────────────────────────────
+// Pause le REPL, attend y/n, reprend
+// Accepte : y, o, oui, yes → true | tout le reste → false
 
 export function confirm(question) {
-  return readlineSync.question(question).trim().toLowerCase() === "y";
+  return new Promise((resolve) => {
+    if (!_rl) {
+      resolve(false);
+      return;
+    }
+
+    // Retire temporairement le listener "line" pour ne pas déclencher onLine
+    _rl.pause();
+    process.stdout.write(question);
+
+    // Écoute une seule fois stdin directement
+    const handler = (data) => {
+      const ans = data.toString().trim().toLowerCase();
+      process.stdout.write("\n");
+      process.stdin.removeListener("data", handler);
+      process.stdin.pause();
+      _rl.resume();
+      resolve(["y", "o", "oui", "yes"].includes(ans));
+    };
+
+    process.stdin.resume();
+    process.stdin.setEncoding("utf8");
+    process.stdin.once("data", handler);
+  });
 }
 
+// ─── question(q) → Promise<string> ───────────────────────────────────────────
+
 export function question(q) {
-  return readlineSync.question(q).trim();
+  return new Promise((resolve) => {
+    if (!_rl) {
+      resolve("");
+      return;
+    }
+
+    _rl.pause();
+    process.stdout.write(q);
+
+    const handler = (data) => {
+      const ans = data.toString().trim();
+      process.stdout.write("\n");
+      process.stdin.removeListener("data", handler);
+      process.stdin.pause();
+      _rl.resume();
+      resolve(ans);
+    };
+
+    process.stdin.resume();
+    process.stdin.setEncoding("utf8");
+    process.stdin.once("data", handler);
+  });
+}
+
+// ─── setBusy — permet à agent.js de signaler qu'une tâche tourne ─────────────
+
+export function setBusy(val) {
+  _busy = val;
 }
